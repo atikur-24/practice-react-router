@@ -2,11 +2,15 @@ import { Form, useLoaderData, redirect } from "react-router-dom";
 import { updateContact } from "../contacts";
 
 export async function action({ request, params }) {
-    const formData = await request.formData();
-    const updates = Object.fromEntries(formData);
-    await updateContact(params.contactId, updates);
-    return redirect(`/contacts/${params.contactId}`);
-  }
+  const formData = await request.formData();
+  const firstName = formData.get("first");
+  const lastName = formData.get("last");
+  const updates = Object.fromEntries(formData);
+  updates.first; // "Some"
+  updates.last; // "Name"
+  await updateContact(params.contactId, updates);
+  return redirect(`/contacts/${params.contactId}`);
+}
 
 export default function EditContact() {
   const { contact } = useLoaderData();
@@ -51,11 +55,7 @@ export default function EditContact() {
       </label>
       <label>
         <span>Notes</span>
-        <textarea
-          name="notes"
-          defaultValue={contact.notes}
-          rows={6}
-        />
+        <textarea name="notes" defaultValue={contact.notes} rows={6} />
       </label>
       <p>
         <button type="submit">Save</button>
